@@ -247,6 +247,12 @@ struct DesktopCapture {
     return ec;
   }
 
+ protected:
+  // 处理X265NAL
+  void onX265Nal(const x265_nal* nal) {
+    LOG(INFO) << "type:" << nal->type << ",size:" << nal->sizeBytes;
+  }
+
  private:
   // 构造方法
   DesktopCapture()
@@ -314,7 +320,11 @@ struct DesktopCapture {
     unsigned int nalNumber = 0;
     auto ret = x265_encoder_encode(m_x265Encoder, &m_x265Nal, &nalNumber,
                                    m_x265Picture, nullptr);
-    if (0 > ret) LOG(ERROR) << "x265_encoder_encode error: " << ret;
+    if (0 > ret)
+      LOG(ERROR) << "x265_encoder_encode error: " << ret;
+    else {
+      for (unsigned int i = 0; i < nalNumber; i++) onX265Nal(&m_x265Nal[i]);
+    }
     return ErrorCode::Ok;
   }
   // x265刷新编码器
@@ -325,6 +335,11 @@ struct DesktopCapture {
       if (0 == (ret = x265_encoder_encode(m_x265Encoder, &m_x265Nal, &nalNumber,
                                           nullptr, nullptr)))
         break;
+      if (0 > ret)
+        LOG(ERROR) << "x265_encoder_encode error: " << ret;
+      else {
+        for (unsigned int i = 0; i < nalNumber; i++) onX265Nal(&m_x265Nal[i]);
+      }
     }
   }
 
