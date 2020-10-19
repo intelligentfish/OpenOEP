@@ -6,6 +6,10 @@
 *.lo
 *.o
 *.obj
+*.pdb
+*.idb
+*.iobj
+*.ipdb
 
 # Precompiled Headers
 *.gch
@@ -30,3 +34,16 @@
 *.exe
 *.out
 *.app
+
+# logs
+*.log
+*.tlog
+Browse.VC.db
+*.CopyComplete
+*.db-shm
+*.db-wal
+*.ipch
+*.opendb
+*.recipe
+*.txt
+*.ilk
